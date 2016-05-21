@@ -417,7 +417,7 @@ static const ability_def Ability_List[] =
 
     // Sif Muna
     { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Energy",
-      0, 0, 0, generic_cost::fixed(25), {FAIL_INVO, 40, 2, 20}, abflag::NONE },
+      0, 0, 0, generic_cost::fixed(50), {FAIL_INVO, 40, 2, 20}, abflag::NONE },
     { ABIL_SIF_MUNA_FORGET_SPELL, "Forget Spell",
       5, 0, 0, 8, {FAIL_INVO}, abflag::NONE },
 
@@ -3301,7 +3301,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     if (you.species == SP_DJINNI)
         _add_talent(talents, ABIL_UNCURSE, check_confused);
 
-    if (you.species == SP_VINE_STALKER)
+    if (you.species == SP_VINE_STALKER && you.form != TRAN_TREE)
         _add_talent(talents, ABIL_LIGNIFY, check_confused);
 
     if (player_has_summons(true)) {

@@ -56,7 +56,7 @@
 #include "unwind.h"
 #include "version.h"
 
-#define SCORE_VERSION "0.1"
+#define SCORE_VERSION "dcssca-0.1"
 
 // enough memory allocated to snarf in the scorefile entries
 static unique_ptr<scorefile_entry> hs_list[SCORE_FILE_ENTRIES];
@@ -2939,7 +2939,7 @@ void mark_milestone(const string &type, const string &milestone,
     lastturn      = you.num_turns;
 
     const string milestone_file =
-        (Options.save_dir + "milestones" + crawl_state.game_type_qualifier());
+        (Options.shared_dir + "milestones" + crawl_state.game_type_qualifier());
     const scorefile_entry se(0, MID_NOBODY, KILL_MISC, nullptr);
     se.set_base_xlog_fields();
     xlog_fields xl = se.get_fields();

@@ -1316,7 +1316,11 @@ static void tag_construct_char(writer &th)
     marshallByte(th, you.religion);
     marshallString2(th, you.jiyva_second_name);
 
+#if defined(DEBUG)
+    marshallByte(th, 0);
+#else
     marshallByte(th, you.wizard);
+#endif
 
     marshallByte(th, crawl_state.type);
     marshallByte(th, crawl_state.difficulty);
@@ -2216,6 +2220,15 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
         crawl_state.map = "";
 
     crawl_state.difficulty = (game_difficulty_level) unmarshallUByte(th);
+    switch(crawl_state.difficulty)
+    {
+        case DIFFICULTY_STANDARD:
+        case DIFFICULTY_CHALLENGE:
+        case DIFFICULTY_NIGHTMARE:
+            break;
+        default:
+            crawl_state.difficulty = DIFFICULTY_CHALLENGE;
+    }
 
     if (major > 32 || major == 32 && minor > 26)
     {
@@ -2358,6 +2371,8 @@ static void tag_read_you(reader &th)
 
     you.target_hunger_state       = (hunger_state_t) unmarshallUByte(th);
     you.motion                    = (motion_type) unmarshallUByte(th);
+    you.last_tohit = 0;
+    you.last_hit_chance = 0;
 
     for (int i = 0; i < NUM_STATS; ++i)
         you.base_stats[i] = unmarshallByte(th);
@@ -2951,12 +2966,6 @@ static void tag_read_you(reader &th)
     {
         if (you.mutation[MUT_FORLORN])
             you.mutation[MUT_FORLORN] = 0;
-    }
-
-    if (th.getMinorVersion() < TAG_MINOR_MP_WANDS)
-    {
-        if (you.mutation[MUT_MP_WANDS] > 1)
-            you.mutation[MUT_MP_WANDS] = 1;
     }
 
     if (th.getMinorVersion() < TAG_MINOR_NAGA_METABOLISM)
